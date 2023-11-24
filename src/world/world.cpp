@@ -5,7 +5,7 @@
 #include <leveldb/filter_policy.h>
 #include <regex>
 
-#include "SmokeyBedrockParser-Core/json.hpp"
+#include "SmokeyBedrockParser-Core/json/json.hpp"
 #include "SmokeyBedrockParser-Core/logger.h"
 #include "SmokeyBedrockParser-Core/nbt.h"
 

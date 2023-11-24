@@ -109,25 +109,8 @@ namespace smokey_bedrock_parser {
 		bool DoesChunkExist(int x, int z) {
 			ChunkKey key(x, z);
 
-			if (!chunks_has_key(chunks, key))
-			{
-				log::trace("Chunk does not exist (x = {}, z = {})", x, z);
-				return false;
-			}
-
-			//log::info("Chunk does exist (x = {}, z = {})", x, z);
-
-			return true;
+			return (chunks_has_key(chunks, key)) ? true : false;
 		};
-
-		void DrawChunk(int chunk_x, int chunk_z, int grid_step) {
-			if (DoesChunkExist(chunk_x, chunk_z)) {
-				ChunkKey key(chunk_x, chunk_z);
-				auto blocks = chunks[key]->blocks;
-				int offset_chunk_x = chunk_x * grid_step;
-				int offset_chunk_z = chunk_z * grid_step;
-			}
-		}
 	private:
 		std::string dimension_name;
 		int dimension_id;

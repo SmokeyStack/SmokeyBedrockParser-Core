@@ -10,14 +10,14 @@ namespace {
 }
 
 namespace smokey_bedrock_parser {
-    Block& Block::GetInstance(const std::string& name, std::tuple<int, int, int> color) {
-        static Block instance(name, color);
+    Block& Block::GetInstance(const std::string& name) {
+        static Block instance(name);
 
         return instance;
     }
 
-    Block* Block::Add(const std::string& name, std::tuple<int, int, int> color) {
-        auto block = new Block(name, color);
+    Block* Block::Add(const std::string& name) {
+        auto block = new Block(name);
 
         if (block_map.find(name) != block_map.end())
             log::error("{} already exists", name);

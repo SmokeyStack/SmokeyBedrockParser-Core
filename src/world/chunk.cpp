@@ -1,11 +1,8 @@
 #include "SmokeyBedrockParser-Core/world/chunk.h"
 
-#include <string>
-#include <cstring>
-#include <cstdint>
 #include <cmath>
 
-#include "SmokeyBedrockParser-Core/json.hpp"
+#include "SmokeyBedrockParser-Core/json/json.hpp"
 #include "SmokeyBedrockParser-Core/logger.h"
 #include "SmokeyBedrockParser-Core/nbt.h"
 
@@ -142,9 +139,8 @@ namespace smokey_bedrock_parser {
 		NbtTagList tag_list;
 		int offset = palette_offset + 4;
 		NbtJson test;
-		test.name = "nbt";
 
-		test.nbt = ParseNbt(&buffer[offset], buffer_length - offset, tag_list).second;
+		test = ParseNbt(&buffer[offset], buffer_length - offset, tag_list).second;
 		//log::info("{}", test.nbt.dump(4, ' ', false, nlohmann::detail::error_handler_t::ignore));
 
 		std::vector<std::string> chunk_palette_id(tag_list.size());
