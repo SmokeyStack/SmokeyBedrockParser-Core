@@ -1,7 +1,7 @@
 #pragma once
 
 #include "nbt_tags.h"
-#include "SmokeyBedrockParser-Core/json.hpp"
+#include "SmokeyBedrockParser-Core/json/json.hpp"
 
 namespace smokey_bedrock_parser {
 	typedef  nlohmann::json NbtJson;

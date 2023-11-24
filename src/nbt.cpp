@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-#include "SmokeyBedrockParser-Core/json.hpp"
+#include "SmokeyBedrockParser-Core/json/json.hpp"
 #include "SmokeyBedrockParser-Core/logger.h"
 
 int32_t global_nbt_list_number = 0;
