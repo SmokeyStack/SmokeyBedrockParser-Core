@@ -4,7 +4,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace smokey_bedrock_parser {
-	auto CreateConsoleSink() {
+	static auto CreateConsoleSink() {
 		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		console_sink->set_pattern("[%Y-%m-%d %T.%e][%^%=7l%$] %v");
 		return console_sink;
