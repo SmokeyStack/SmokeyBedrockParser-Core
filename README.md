@@ -14,3 +14,12 @@ SmokeyBedrockParser is C++ library that interacts with the leveldb databases tha
 - Navigate to `compile.bat` and edit the path to Vcpkg's `CMAKE_TOOLCHAIN_FILE` to match your installation.
 - Run `compile.bat` to build the project.
 - If this is successful, SmokeyBedrockParser-Core can be found in `build/Release/SmokeyBedrockParser-Core.lib`.
+
+## Third Party Software
+
+This project uses the following third party software:
+
+- [google/leveldb](https://github.com/google/leveldb)
+- [ljfa-ag/libnbtplusplus](https://github.com/ljfa-ag/libnbtplusplus)
+- [gabime/spdlog](https://github.com/gabime/spdlog)
+- [nlohmann/json](https://github.com/nlohmann/json)
