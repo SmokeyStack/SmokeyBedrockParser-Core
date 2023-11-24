@@ -17,7 +17,9 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.c include/*cpp)
 file(GLOB_RECURSE HEADER_FILES include/*.h include/*.hpp)
-add_library(${LIB_NAME} STATIC ${SRC_FILES})
+if (NOT TARGET ${LIB_NAME})
+    add_library(${LIB_NAME} STATIC ${SRC_FILES})
+endif()
 
 if (NOT TARGET leveldb)
     add_subdirectory(third-party/leveldb)
