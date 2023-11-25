@@ -117,7 +117,7 @@ namespace smokey_bedrock_parser {
             return 0;
         }
 
-        int ParseDB();
+        std::vector<std::pair<std::string, std::vector<std::string>>> ParseDB();
 
         int ParseDBKey(int x, int z);
 

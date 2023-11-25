@@ -404,19 +404,24 @@ namespace smokey_bedrock_parser {
 		return result.first;
 	}
 
-	int MinecraftWorldLevelDB::ParseDB() {
+	std::vector<std::pair<std::string, std::vector<std::string>>> MinecraftWorldLevelDB::ParseDB() {
 		CalculateTotalRecords();
 
 		log::info("Parsing all leveldb records");
 
-		NbtTagList tag_list;
+		std::vector<std::pair<std::string, std::vector<std::string>>> result;
+		std::vector<std::string> records_chunk;
+		std::vector<std::string> records_village;
+		std::vector<std::string> records_actor;
+		std::vector<std::string> records_player;
+		std::vector<std::string> records_other;
+
 		int record_count = 0, result = 0;
 		leveldb::Slice key, value;
 		size_t key_size;
 		size_t value_size;
 		const char* key_name;
 		const char* key_data;
-		std::vector<std::string> villages;
 		std::vector<uint64_t> actor_ids;
 		leveldb::Iterator* it = db->NewIterator(leveldb_read_options);
 
@@ -446,36 +451,25 @@ namespace smokey_bedrock_parser {
 				Sources for more NBT data: https://minecraft.wiki/w/Bedrock_Edition_level_format/Other_data_format
 			*/;
 			if (IsChunkKey({ key_name,key_size }).first) {
-				ParseChunkKey({ key_name, key_size }, key_data, value_size);
+				records_chunk.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "BiomeData", key_size) == 0) {
-				log::info("Found key - BiomeData");
-
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
+				records_other.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "Overworld", key_size) == 0) {
-				log::info("Found key - Overworld");
-
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
+				records_other.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "~local_player", key_size) == 0) {
-				log::info("Found key - ~local_player");
-
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
+				records_player.push_back(SliceToHexString(key));
 			}
 			else if ((key_size >= 7) && (strncmp(key_name, "player_", 7) == 0)) {
-				std::string player_remote_Id = std::string(&key_name[strlen("player_")], key_size - strlen("player_"));
-				log::info("Found key - player_{}", player_remote_Id);
-
-				//ParseNbt(key_data, int32_t(key_data), tag_list);
+				records_player.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "game_flatworldlayers", key_size) == 0) {
-				log::info("Found key - game_flatworldlayers");
+				records_other.push_back(SliceToHexString(key));
 
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
 			}
 			else if (strncmp(key_name, "VILLAGE_", 8) == 0) {
-				log::info("Found key - Village-{}", key.ToString());
 				char village_id[37];
 				char dimension_name[9];
 
@@ -483,26 +477,19 @@ namespace smokey_bedrock_parser {
 
 				memcpy(village_id, key_name + sizeof(dimension_name) + 9, 36);
 
-				log::info("Village ID-{}", village_id);
-
 				if (std::regex_match(key.ToString(), village_info_regex))
-					villages.push_back(std::string((std::string)dimension_name + "_" + (std::string)village_id));
+					records_village.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "AutonomousEntities", key_size) == 0) {
-				log::info("Found key - AutonomousEntities");
-
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
+				records_other.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "digp", 4) == 0) {
-				for (uint32_t i = 0; i < value_size; i += 8)
-					actor_ids.push_back(*(uint64_t*)(key_data + i));
+				records_actor.push_back(SliceToHexString(key));
 			}
 			else if (strncmp(key_name, "actorprefix", 11) == 0) {
-				log::info("Found key - actorprefix");
-
-				//ParseNbt(key_data, int32_t(value_size), tag_list);
+				records_actor.push_back(SliceToHexString(key));
 			}
-			//else log::error("Unknown record - key_size={} value_size={}", key_size, value_size);
+			else records_other.push_back(SliceToHexString(key));
 		}
 
 		log::info("Read {} records", record_count);
@@ -557,7 +544,13 @@ namespace smokey_bedrock_parser {
 		}
 		*/
 
-		return 0;
+		result.push_back(std::make_pair("chunk", records_chunk));
+		result.push_back(std::make_pair("village", records_village));
+		result.push_back(std::make_pair("actor", records_actor));
+		result.push_back(std::make_pair("player", records_player));
+		result.push_back(std::make_pair("other", records_other));
+
+		return result;
 	}
 
 	int MinecraftWorldLevelDB::ParseDBKey(int x, int z) {
