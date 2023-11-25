@@ -416,7 +416,7 @@ namespace smokey_bedrock_parser {
 		std::vector<std::string> records_player;
 		std::vector<std::string> records_other;
 
-		int record_count = 0, result = 0;
+		int record_count = 0;
 		leveldb::Slice key, value;
 		size_t key_size;
 		size_t value_size;
