@@ -651,5 +651,22 @@ namespace smokey_bedrock_parser {
 		}
 	}
 
+	nlohmann::json MinecraftWorldLevelDB::GetKey(std::string& key) {
+		NbtJson result;
+		NbtTagList tag_list;
+		std::string temp_data;
+		leveldb::Slice key_slice(key);
+		const char* key_data = key_slice.data();
+		int key_size = (int)key_slice.size();
+
+		db->Get(leveldb_read_options, key_slice, &temp_data);
+
+		if (strncmp(key_data, "~local_player", key_size) == 0) {
+			result = ParseNbt(temp_data.data(), temp_data.size(), tag_list);
+		}
+
+		return result;
+	}
+
 	std::unique_ptr<MinecraftWorldLevelDB> world;
 } // namespace smokey_bedrock_parser
