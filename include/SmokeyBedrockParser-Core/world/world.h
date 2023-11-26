@@ -6,6 +6,7 @@
 #include <leveldb/db.h>
 #include <sstream>
 
+#include "SmokeyBedrockParser-Core/json/json.hpp"
 #include "SmokeyBedrockParser-Core/logger.h"
 #include "SmokeyBedrockParser-Core/util.h"
 #include "SmokeyBedrockParser-Core/world/dimension.h"
