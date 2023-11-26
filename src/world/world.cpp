@@ -654,7 +654,9 @@ namespace smokey_bedrock_parser {
 		NbtJson result;
 		NbtTagList tag_list;
 		std::string temp_data;
-		leveldb::Slice key_slice(key);
+		std::vector<char> bytes = HexToBytes(key);
+		std::string temp_str(bytes.begin(), bytes.end());
+		leveldb::Slice key_slice(temp_str);
 		const char* key_data = key_slice.data();
 		int key_size = (int)key_slice.size();
 
