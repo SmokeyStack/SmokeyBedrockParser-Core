@@ -31,103 +31,6 @@ static std::pair<bool, int32_t> IsChunkKey(std::string_view key) {
 	return std::make_pair(false, 0);
 }
 
-// https://learn.microsoft.com/en-us/minecraft/creator/documents/actorstorage
-enum class ChunkTag : char {
-	Data3D = 43,
-	Version, // This was moved to the front as needed for the extended heights feature. Old chunks will not have this data.
-	Data2D,
-	Data2DLegacy,
-	SubChunkPrefix,
-	LegacyTerrain,
-	BlockEntity,
-	Entity,
-	PendingTicks,
-	LegacyBlockExtraData,
-	BiomeState,
-	FinalizedState,
-	ConversionData, // data that the converter provides, that are used at runtime for things like blending
-	BorderBlocks,
-	HardcodedSpawners,
-	RandomTicks,
-	CheckSums,
-	GenerationSeed,
-	GeneratedPreCavesAndCliffsBlending = 61, // not used, DON'T REMOVE
-	BlendingBiomeHeight = 62, // not used, DON'T REMOVE
-	MetaDataHash,
-	BlendingData,
-	ActorDigestVersion,
-	LegacyVersion = 118,
-};
-
-struct ChunkData {
-	int chunk_x;
-	int chunk_z;
-	int chunk_dimension_id;
-	ChunkTag chunk_tag;
-	int chunk_type_sub;
-	std::string dimension_name;
-};
-
-template<>
-struct fmt::formatter<ChunkTag> : fmt::formatter<std::string>
-{
-	auto format(ChunkTag my, format_context& ctx) const -> decltype(ctx.out())
-	{
-		switch (my) {
-		case ChunkTag::Data3D:
-			return format_to(ctx.out(), "Data3D");
-		case ChunkTag::Version:
-			return format_to(ctx.out(), "Version");
-		case ChunkTag::Data2D:
-			return format_to(ctx.out(), "Data2D");
-		case ChunkTag::Data2DLegacy:
-			return format_to(ctx.out(), "Data2DLegacy");
-		case ChunkTag::SubChunkPrefix:
-			return format_to(ctx.out(), "SubChunkPrefix");
-		case ChunkTag::LegacyTerrain:
-			return format_to(ctx.out(), "LegacyTerrain");
-		case ChunkTag::BlockEntity:
-			return format_to(ctx.out(), "BlockEntity");
-		case ChunkTag::Entity:
-			return format_to(ctx.out(), "Entity");
-		case ChunkTag::PendingTicks:
-			return format_to(ctx.out(), "PendingTicks");
-		case ChunkTag::LegacyBlockExtraData:
-			return format_to(ctx.out(), "LegacyBlockExtraData");
-		case ChunkTag::BiomeState:
-			return format_to(ctx.out(), "BiomeState");
-		case ChunkTag::FinalizedState:
-			return format_to(ctx.out(), "FinalizedState");
-		case ChunkTag::ConversionData:
-			return format_to(ctx.out(), "ConversionData");
-		case ChunkTag::BorderBlocks:
-			return format_to(ctx.out(), "BorderBlocks");
-		case ChunkTag::HardcodedSpawners:
-			return format_to(ctx.out(), "HardcodedSpawners");
-		case ChunkTag::RandomTicks:
-			return format_to(ctx.out(), "RandomTicks");
-		case ChunkTag::CheckSums:
-			return format_to(ctx.out(), "CheckSums");
-		case ChunkTag::GenerationSeed:
-			return format_to(ctx.out(), "GenerationSeed");
-		case ChunkTag::GeneratedPreCavesAndCliffsBlending:
-			return format_to(ctx.out(), "GeneratedPreCavesAndCliffsBlending");
-		case ChunkTag::BlendingBiomeHeight:
-			return format_to(ctx.out(), "BlendingBiomeHeight");
-		case ChunkTag::MetaDataHash:
-			return format_to(ctx.out(), "MetaDataHash");
-		case ChunkTag::BlendingData:
-			return format_to(ctx.out(), "BlendingData");
-		case ChunkTag::ActorDigestVersion:
-			return format_to(ctx.out(), "ActorDigestVersion");
-		case ChunkTag::LegacyVersion:
-			return format_to(ctx.out(), "LegacyVersion");
-		default:
-			return format_to(ctx.out(), "Unknown");
-		}
-	}
-};
-
 static std::vector<char> HexToBytes(const std::string& hex) {
 	std::vector<char> bytes;
 
@@ -172,6 +75,66 @@ static std::vector<char> CoordsToDbKey(int x, int z, int y) {
 
 	return HexToBytes(temp_data);
 }
+
+template<>
+struct fmt::formatter<smokey_bedrock_parser::ChunkTag> : fmt::formatter<std::string>
+{
+	auto format(smokey_bedrock_parser::ChunkTag my, format_context& ctx) const -> decltype(ctx.out())
+	{
+		switch (my) {
+		case smokey_bedrock_parser::ChunkTag::Data3D:
+			return format_to(ctx.out(), "Data3D");
+		case smokey_bedrock_parser::ChunkTag::Version:
+			return format_to(ctx.out(), "Version");
+		case smokey_bedrock_parser::ChunkTag::Data2D:
+			return format_to(ctx.out(), "Data2D");
+		case smokey_bedrock_parser::ChunkTag::Data2DLegacy:
+			return format_to(ctx.out(), "Data2DLegacy");
+		case smokey_bedrock_parser::ChunkTag::SubChunkPrefix:
+			return format_to(ctx.out(), "SubChunkPrefix");
+		case smokey_bedrock_parser::ChunkTag::LegacyTerrain:
+			return format_to(ctx.out(), "LegacyTerrain");
+		case smokey_bedrock_parser::ChunkTag::BlockEntity:
+			return format_to(ctx.out(), "BlockEntity");
+		case smokey_bedrock_parser::ChunkTag::Entity:
+			return format_to(ctx.out(), "Entity");
+		case smokey_bedrock_parser::ChunkTag::PendingTicks:
+			return format_to(ctx.out(), "PendingTicks");
+		case smokey_bedrock_parser::ChunkTag::LegacyBlockExtraData:
+			return format_to(ctx.out(), "LegacyBlockExtraData");
+		case smokey_bedrock_parser::ChunkTag::BiomeState:
+			return format_to(ctx.out(), "BiomeState");
+		case smokey_bedrock_parser::ChunkTag::FinalizedState:
+			return format_to(ctx.out(), "FinalizedState");
+		case smokey_bedrock_parser::ChunkTag::ConversionData:
+			return format_to(ctx.out(), "ConversionData");
+		case smokey_bedrock_parser::ChunkTag::BorderBlocks:
+			return format_to(ctx.out(), "BorderBlocks");
+		case smokey_bedrock_parser::ChunkTag::HardcodedSpawners:
+			return format_to(ctx.out(), "HardcodedSpawners");
+		case smokey_bedrock_parser::ChunkTag::RandomTicks:
+			return format_to(ctx.out(), "RandomTicks");
+		case smokey_bedrock_parser::ChunkTag::CheckSums:
+			return format_to(ctx.out(), "CheckSums");
+		case smokey_bedrock_parser::ChunkTag::GenerationSeed:
+			return format_to(ctx.out(), "GenerationSeed");
+		case smokey_bedrock_parser::ChunkTag::GeneratedPreCavesAndCliffsBlending:
+			return format_to(ctx.out(), "GeneratedPreCavesAndCliffsBlending");
+		case smokey_bedrock_parser::ChunkTag::BlendingBiomeHeight:
+			return format_to(ctx.out(), "BlendingBiomeHeight");
+		case smokey_bedrock_parser::ChunkTag::MetaDataHash:
+			return format_to(ctx.out(), "MetaDataHash");
+		case smokey_bedrock_parser::ChunkTag::BlendingData:
+			return format_to(ctx.out(), "BlendingData");
+		case smokey_bedrock_parser::ChunkTag::ActorDigestVersion:
+			return format_to(ctx.out(), "ActorDigestVersion");
+		case smokey_bedrock_parser::ChunkTag::LegacyVersion:
+			return format_to(ctx.out(), "LegacyVersion");
+		default:
+			return format_to(ctx.out(), "Unknown");
+		}
+	}
+};
 
 namespace {
 	class NullLogger : public leveldb::Logger {
@@ -579,7 +542,7 @@ namespace smokey_bedrock_parser {
 		return 0;
 	}
 
-	void MinecraftWorldLevelDB::ParseChunkKey(std::string_view key, const char* data, size_t size) {
+	ChunkData MinecraftWorldLevelDB::ParseChunkKey(std::string_view key, const char* data, size_t size) {
 		ChunkData chunk_data;
 
 		chunk_data.chunk_x = key[0];
@@ -648,6 +611,8 @@ namespace smokey_bedrock_parser {
 		default:
 			break;
 		}
+
+		return chunk_data;
 	}
 
 	nlohmann::json MinecraftWorldLevelDB::GetKey(std::string& key) {
@@ -658,11 +623,15 @@ namespace smokey_bedrock_parser {
 		std::string temp_str(bytes.begin(), bytes.end());
 		leveldb::Slice key_slice(temp_str);
 		const char* key_data = key_slice.data();
-		int key_size = (int)key_slice.size();
+		size_t key_size = (int)key_slice.size();
 
 		db->Get(leveldb_read_options, key_slice, &temp_data);
 
-		if (strncmp(key_data, "~local_player", key_size) == 0) {
+		if (IsChunkKey({ key_data,key_size }).first) {
+			auto chunk = ParseChunkKey({ key_data, key_size }, temp_data.data(), temp_data.size());
+			result = world->dimensions[chunk.chunk_dimension_id]->GetChunk(chunk.chunk_x, chunk.chunk_z, chunk.chunk_type_sub);
+		}
+		else if (strncmp(key_data, "~local_player", key_size) == 0) {
 			result = ParseNbt(temp_data.data(), temp_data.size(), tag_list);
 		}
 

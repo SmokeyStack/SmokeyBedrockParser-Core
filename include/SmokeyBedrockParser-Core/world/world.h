@@ -12,6 +12,43 @@
 #include "SmokeyBedrockParser-Core/world/dimension.h"
 
 namespace smokey_bedrock_parser {
+	// https://learn.microsoft.com/en-us/minecraft/creator/documents/actorstorage
+	enum class ChunkTag : char {
+		Data3D = 43,
+		Version, // This was moved to the front as needed for the extended heights feature. Old chunks will not have this data.
+		Data2D,
+		Data2DLegacy,
+		SubChunkPrefix,
+		LegacyTerrain,
+		BlockEntity,
+		Entity,
+		PendingTicks,
+		LegacyBlockExtraData,
+		BiomeState,
+		FinalizedState,
+		ConversionData, // data that the converter provides, that are used at runtime for things like blending
+		BorderBlocks,
+		HardcodedSpawners,
+		RandomTicks,
+		CheckSums,
+		GenerationSeed,
+		GeneratedPreCavesAndCliffsBlending = 61, // not used, DON'T REMOVE
+		BlendingBiomeHeight = 62, // not used, DON'T REMOVE
+		MetaDataHash,
+		BlendingData,
+		ActorDigestVersion,
+		LegacyVersion = 118,
+	};
+
+	struct ChunkData {
+		int chunk_x;
+		int chunk_z;
+		int chunk_dimension_id;
+		ChunkTag chunk_tag;
+		int chunk_type_sub;
+		std::string dimension_name;
+	};
+
 	class MinecraftWorld {
 	public:
 		MinecraftWorld() {
@@ -122,7 +159,7 @@ namespace smokey_bedrock_parser {
 
 		int ParseDBKey(int x, int z);
 
-		void ParseChunkKey(std::string_view key, const char* data, size_t size);
+		ChunkData ParseChunkKey(std::string_view key, const char* data, size_t size);
 
 		nlohmann::json GetKey(std::string& key);
 	private:

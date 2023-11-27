@@ -111,6 +111,18 @@ namespace smokey_bedrock_parser {
 
 			return (chunks_has_key(chunks, key)) ? true : false;
 		};
+
+		nlohmann::json GetChunk(int x, int z, int y) {
+			if (!DoesChunkExist(x, z)) return NULL;
+
+			nlohmann::json json;
+			json["chunk_x"] = x;
+			json["chunk_y"] = y;
+			json["chunk_z"] = z;
+			json["blocks"] = chunks[ChunkKey(x, z)]->blocks;
+
+			return json;
+		}
 	private:
 		std::string dimension_name;
 		int dimension_id;
