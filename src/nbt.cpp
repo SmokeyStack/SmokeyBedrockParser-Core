@@ -249,4 +249,40 @@ namespace smokey_bedrock_parser {
 
 		return 0;
 	}
+
+	nbt::tag_compound JsonToNbt(nlohmann::json json) {
+		nbt::tag_compound tag;
+		for (auto& [key, value] : json.items()) {
+			switch (value.type()) {
+			case nlohmann::json::value_t::boolean:
+				tag[key] = nbt::tag_byte(value.get<bool>());
+				log::info("Type: boolean");
+				break;
+			case nlohmann::json::value_t::string:
+				tag[key] = nbt::tag_string(value.get<std::string>());
+				log::info("Type: string");
+				break;
+			case nlohmann::json::value_t::number_integer:
+			case nlohmann::json::value_t::number_unsigned:
+				tag[key] = nbt::tag_int(value.get<int>());
+				log::info("Type: int");
+				break;
+			case nlohmann::json::value_t::number_float:
+				log::info("Type: float");
+				tag[key] = nbt::tag_float(value.get<float>());
+				break;
+			case nlohmann::json::value_t::object:
+				log::info("Type: object");
+				tag[key] = JsonToNbt(value);
+				break;
+				/*case nlohmann::json::value_t::array:
+					tag[key] = nbt::tag_byte(value.get<bool>());
+					break;*/
+			default:
+				break;
+			}
+		}
+
+		return tag;
+	}
 } // namespace smokey_bedrock_parser
