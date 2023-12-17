@@ -48,4 +48,6 @@ namespace smokey_bedrock_parser {
 
 	std::pair<int, nlohmann::json> ParseNbt(const char* buffer, int32_t buffer_length, NbtTagList& tag_list);
 	int ParseNbtVillage(NbtTagList& tags_info, NbtTagList& tags_player, NbtTagList& tags_dweller, NbtTagList& tags_poi);
+
+	nbt::tag_compound JsonToNbt(nlohmann::json json);
 } // namespace smokey_bedrock_parser

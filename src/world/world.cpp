@@ -638,5 +638,41 @@ namespace smokey_bedrock_parser {
 		return result;
 	}
 
+	int MinecraftWorldLevelDB::EditKey(std::string& key, nlohmann::json json) {
+		NbtTagList tag_list;
+		std::string temp_data;
+		std::vector<char> bytes = HexToBytes(key);
+		std::string temp_str(bytes.begin(), bytes.end());
+		leveldb::Slice key_slice(temp_str);
+		const char* key_data = key_slice.data();
+		size_t key_size = (int)key_slice.size();
+
+		db->Get(leveldb_read_options, key_slice, &temp_data);
+		log::info(temp_data);
+
+		log::info(ParseNbt(temp_data.data(), temp_data.size(), tag_list).second.dump());
+
+		/*
+		//Write into stream in Big Endian
+		nbt::io::write_tag(tag_list[0].first, *tag_list[0].second, sstr, endian::little);
+		nbt::io::write_tag("identifier", nbt::tag_string("yolo"), sstr, endian::little);
+
+		//Read from stream in Big Endian and compare
+		auto written_pair = nbt::io::read_compound(sstr, endian::little);
+		log::info("Tessting - {}", (*written_pair.second == *tag_list[0].second));
+		*/
+
+		log::info("Json: {}", json.dump(4, ' ', false, nlohmann::detail::error_handler_t::ignore));
+
+		nbt::tag_compound tag = JsonToNbt(json);
+		std::stringstream sstr;
+		nbt::io::stream_writer writer(sstr, endian::little);
+		writer.write_tag("", tag);
+
+		db->Put(leveldb::WriteOptions(), key_slice, sstr.str());
+
+		return 0;
+	}
+
 	std::unique_ptr<MinecraftWorldLevelDB> world;
 } // namespace smokey_bedrock_parser

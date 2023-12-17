@@ -162,6 +162,8 @@ namespace smokey_bedrock_parser {
 		ChunkData ParseChunkKey(std::string_view key, const char* data, size_t size);
 
 		nlohmann::json GetKey(std::string& key);
+
+		int EditKey(std::string& key, nlohmann::json json);
 	private:
 		leveldb::DB* db;
 		std::unique_ptr<leveldb::Options> db_options;
