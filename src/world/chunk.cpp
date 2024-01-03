@@ -173,13 +173,10 @@ namespace smokey_bedrock_parser {
 
 					block_id = chunk_palette_id[palette_id];
 					int32_t actual_y = y + chunk_y * 16;
+					blocks[chunk_y + 4][x][z][y] = block_id + " x: " + std::to_string(x) + " z: " + std::to_string(z) + " y: " + std::to_string(actual_y);
 
-					if (block_id != "minecraft:air") {
-						if ((actual_y >= top_blocks[x][z])) {
-							blocks[x][z] = block_id;
-							top_blocks[x][z] = actual_y;
-						}
-					}
+					if (block_id != "minecraft:air" && actual_y >= top_blocks[x][z])
+						top_blocks[x][z] = actual_y;
 				}
 			}
 		}

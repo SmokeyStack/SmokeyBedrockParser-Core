@@ -123,6 +123,16 @@ namespace smokey_bedrock_parser {
 
 			return json;
 		}
+
+		std::string GetBlock(int x, int y, int z) {
+			int chunk_x = floor(x / 16);
+			int chunk_y = floor(y / 16);
+			int chunk_z = floor(z / 16);
+
+			if (!DoesChunkExist(chunk_x, chunk_z)) return NULL;
+
+			return chunks[ChunkKey(x, z)]->blocks[chunk_y + 4][x % 16][z % 16][y % 16];
+		}
 	private:
 		std::string dimension_name;
 		int dimension_id;

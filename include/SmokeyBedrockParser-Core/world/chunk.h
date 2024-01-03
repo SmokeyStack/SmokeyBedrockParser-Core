@@ -8,7 +8,7 @@ namespace smokey_bedrock_parser {
 	class Chunk {
 	public:
 		int32_t chunk_x, chunk_z;
-		std::string blocks[16][16];
+		std::string blocks[24][16][16][16];
 		int top_blocks[16][16];
 		int32_t chunk_format_version;
 
