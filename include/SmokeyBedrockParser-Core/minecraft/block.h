@@ -5,8 +5,6 @@
 namespace smokey_bedrock_parser {
     class Block {
     public:
-        std::string name;
-
         Block(const Block&) = delete;
         void operator=(const Block&) = delete;
 
@@ -14,8 +12,9 @@ namespace smokey_bedrock_parser {
         static Block* Add(const std::string& name);
         static Block* Get(const std::string& name);
     private:
+        std::string name;
         Block(const std::string& name) {
             this->name = name;
         }
     };
-}
+} // namespace smokey_bedrock_parser

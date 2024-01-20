@@ -285,4 +285,16 @@ namespace smokey_bedrock_parser {
 
 		return tag;
 	}
+
+	std::string NbtToString(const char* buffer, int32_t buffer_length) {
+		std::string s(buffer, buffer_length);
+		std::stringstream ss;
+		ss << std::hex << std::setfill('0');
+
+		for (size_t a = 0; a < s.size(); a++)
+			ss << std::setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(s[a]));
+
+		return ss.str();
+	}
+
 } // namespace smokey_bedrock_parser
